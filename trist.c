@@ -99,6 +99,49 @@ struct node_s * create_node(int key){
     return (&temp_user_node->node);
 }
 
+
+//=========================================================================================
+//
+//=========================================================================================
+//
+
+struct head_struct {
+    struct node_s mid;
+    int num_left;
+    int num_right;
+    int balanced;
+    int key_mid;
+    struct node_s *head;
+};
+
+int comp_mid_func(int key,struct head_struct * head_var){
+    return (key - head_var->key_mid);
+}
+
+int init_head_struct(struct head_struct * head_var){
+    head_var->num_left = 0;
+    head_var->num_right = 0;
+    head_var->balanced = 0;
+    head_var->key_mid = 0;
+    head_var->head = NULL;
+}
+
+int insert_before_node(struct  node_s *node_to_insert,struct node_s * node_after, struct node_s **head){
+    if(node_after == *head){
+        node_to_insert->next = node_after;
+        node_to_insert->prev = node_after->prev;
+
+
+
+int ins_node(int key,struct head_struct * head_var ){
+    if(head_var->head == NULL){
+        //list is empty or not initialised
+    //TODO add insert after node and insert before node so that we can isert befor and after node
+    insert_node(create_node(key),&head_var->head,cmp_user_data_func);
+
+
+
+
 int main(){
     struct node_s * head;
     struct node_s * nnode;
