@@ -1,6 +1,10 @@
 #include <stdio.h>
+#include <stdlib.h>
 //#include "slab.h"
 
+#define setBit(v,n) (v |= 1 << n)
+#define clrBit(v,n) (v &= ~(1 << n))
+#define isBitSet(v,n) (v & (1 << n))
 
 struct slab_head {
 	void * ptr;
@@ -13,8 +17,8 @@ struct slab_head {
 } slb_head;
 
 struct slab_head * slab_init(size_t size , int num){
-	slab_head.ptr = malloc(256);
-	if(slab_head.ptr == NULL)
+	slb_head.ptr = malloc(256);
+	if(slb_head.ptr == NULL)
 		return NULL;
 	slb_head.alloc_book = 0;
 	slb_head.alloc_num = 0;
@@ -26,6 +30,7 @@ struct slab_head * slab_init(size_t size , int num){
 }
 
 void * slab_alloc(struct slab_head * slb_ptr){
+    int i;
 	if(slb_ptr->alloc_num == 255)
 		return NULL;
 	//TODO allocate one more and attach it to next
@@ -38,24 +43,26 @@ void * slab_alloc(struct slab_head * slb_ptr){
 	}
 	// use gcc macro Unlikely
 	return NULL;	
+    }
 }
 
 int slab_free(struct slab_head * slb_ptr,void * ptr){
 	if(ptr == NULL)
 		return -1;
-	ptr -= slb_ptr->ptr;
-	if((ptr > 0)&&(ptr < (256* slb_ptr->size))){
-		if((ptr % slb_ptr->size) != 0){
+	int diff = ptr - slb_ptr->ptr;
+	if((diff > 0)&&(diff < (256* slb_ptr->size))){
+		if((diff % slb_ptr->size) != 0){
 			//allignment mismatch
 			return -2;
 		}
-		clrBit(slb_ptr->alloc_book,(ptr/slb_ptr->size))
+		clrBit(slb_ptr->alloc_book,(diff/slb_ptr->size));
 	}
 //TODO check if this ptr is part of next and next till next is NULL
 	return 0;
 }
 
 int slab_deinit(struct slab_head * slb_ptr){
+    free(slb_ptr->ptr);
 	return 0;
 	//free slb_ptr in future when we dynamically allocate it
 }
@@ -66,9 +73,11 @@ struct user_data {
 int x;
 char test[1024];
 };
+#define split_number(n,l,r,b) l = (n >> b);                 \
+    r = n - (l << b);           \
 
 int main(){
-	struct slab_head * sh;
+/*	struct slab_head * sh;
 	sh = slab_init(sizeof(struct user_data),1000);
 
 	for(i=0;i < 1000 ; i++){
@@ -80,4 +89,14 @@ int main(){
 	}
 
 	slab_deinit(sh);
+*/
+    long num = 0xFFFF55AA,num_left,num_right,base=16;
+    while(base != 0){
+    split_number(num,num_left,num_right,base)
+    switch(left_num){
+        case 0:
+                    base /= 2;
+
+    printf("%X %X = %X",num_left , num_right , num );
+    return 0;
 }
