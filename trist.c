@@ -86,6 +86,65 @@ int remove_node(struct node_s * del_node ,struct node_s ** head , int (*cmp_user
     return -1;
 }
 
+int insert_node_to_left(struct node_s * new_node, struct node_s ** head , struct node_s * node){
+	struct node_s * node_temp;
+	if(new_node == NULL){
+		return -1;
+		//handle this case
+	}
+	if(node == NULL){
+		*head = node_temp;
+		new_node->prev = NULL;
+		new_node->next = NULL;
+		return 0;
+	}
+	node_temp = node->prev;
+	if(node_temp == NULL){
+		if(node != *head){
+			return -2;
+		}
+		*head = new_node;
+		new_node->prev = NULL;
+		new_node->next = node;
+		return 0;
+	}
+
+	node->prev = new_node;
+	new_node->next = node;
+	new_node->prev = node_temp;
+	node_temp->next = new_node;
+	return 1;
+}
+
+int insert_node_to_right(struct node_s * new_node, struct node_s ** head , struct node_s * node){
+	struct node_s * node_temp;
+	if(new_node == NULL){
+		return -1;
+		//handle this case
+	}
+	if(node == NULL){
+		*head = node_temp;
+		new_node->prev = NULL;
+		new_node->next = NULL;
+		return 0;
+	}
+	node_temp = node->next;
+	if(node_temp == NULL){
+		if(node != *head){
+			return -2;
+		}
+		new_node->next = NULL;
+		node->next = new_node;
+		return 0;
+	}
+
+	node->prev = new_node;
+	new_node->next = node;
+	new_node->prev = node_temp;
+	node_temp->next = new_node;
+	return 1;
+}
+
 int iterate_list( struct node_s * head){
     for(struct node_s * node = head; node != NULL ; node = node->next){
         printf("%d\n",CONTAINER_OF(node,struct node_user_data,node)->key); 
