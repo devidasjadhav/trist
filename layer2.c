@@ -16,4 +16,4 @@ int insert_node_l2(int key,struct head_struct * head_var){
 
 int remove_node_l2(int key,struct head_struct * head_var){
     char ret;
-    
+    struct node_s 

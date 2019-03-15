@@ -129,21 +129,62 @@ int insert_node_to_right(struct node_s * new_node, struct node_s ** head , struc
 		return 0;
 	}
 	node_temp = node->next;
-	if(node_temp == NULL){
-		if(node != *head){
-			return -2;
-		}
-		new_node->next = NULL;
-		node->next = new_node;
-		return 0;
-	}
 
-	node->prev = new_node;
-	new_node->next = node;
-	new_node->prev = node_temp;
-	node_temp->next = new_node;
+	node->next = new_node;
+	new_node->prev = node;
+	new_node->next = node_temp;
+	if(node_temp != NULL){
+		node_temp->prev = new_node;
+	}
 	return 1;
 }
+
+int delete_intermediate_node(struct node_s ** head , struct node_s * node){
+	struct node_s *del_node, *prev_delnode,*next_delnode;
+	if(node == NULL){
+		return -1;
+	}
+	if(node == *head){
+		*head == NULL;
+		return 0;
+	}
+	prev_delnode = node->prev;
+	next_delnode = node->next;
+	if(prev_delnode == NULL){
+		return -3;
+		//very unlikely as head will have this property
+	}
+	prev_delnode->next = next_delnode;
+	next_delnode->prev = prev_delnode;
+	return 1;
+}
+
+struct node_s * where_to_insert(struct node_s * base_node ,struct node_s * new_node , char left_right , cmp_user_data_var cmp_user_data_func){
+	
+	struct node_s *loop_node, *prev_node = NULL;
+	
+	if((base_node == NULL)||(new_node == NULL)){
+		return NULL;
+	}
+
+	for(loop_node = base_node; loop_node != NULL; loop_node = ((left_right == 0) ? loop_node->prev : loop_node->next)){
+		
+		if(!(cmp_user_data_func(loop_node,new_node))){
+			return loop_node;
+		}
+		
+		if(loop_node != NULL){
+			prev_node = loop_node;
+		}
+	}
+/*
+	if( prev_node == NULL){
+		return NULL;
+	}
+*/
+	return prev_node;	
+}
+
 
 int iterate_list( struct node_s * head){
     for(struct node_s * node = head; node != NULL ; node = node->next){
@@ -163,7 +204,7 @@ struct node_s * create_node(int key){
 //
 //=========================================================================================
 //
-
+/*
 struct head_struct {
     struct node_s mid;
     int num_left;
@@ -199,22 +240,21 @@ int ins_node(int key,struct head_struct * head_var ){
     insert_node(create_node(key),&head_var->head,cmp_user_data_func);
 
 
-
+*/
 
 int main(){
     struct node_s * head;
     struct node_s * nnode;
     head = NULL;
     insert_node(create_node(11),&head,cmp_user_data_func);
-    iterate_list(head);
     insert_node(create_node(21),&head,cmp_user_data_func);
-    iterate_list(head);
-    insert_node(create_node(51),&head,cmp_user_data_func);
-    iterate_list(head);
+    nnode =  create_node(25);
+    insert_node(nnode,&head,cmp_user_data_func);
     insert_node(create_node(41),&head,cmp_user_data_func);
-    iterate_list(head);
     insert_node(create_node(31),&head,cmp_user_data_func);
+
     iterate_list(head);
+
     for(struct node_s * node = head; node != NULL ; ){	
         printf("test\n");
         nnode = node->next;
